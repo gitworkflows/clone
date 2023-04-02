@@ -32,4 +32,4 @@ jobs:
           git commit -m "Add repositories to workflow"
           git push origin main
         env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.CLONE }}
