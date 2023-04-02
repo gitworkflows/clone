@@ -1,35 +1,26 @@
-name: Add Repositories to Workflow
+name: Update CVE list
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
-  add_repos:
+  update-cve-list:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set Up Python
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: "3.x"
-
-      - name: Install Requests Library
+      - name: Install dependencies
         run: pip install requests
-
-      - name: Add Repositories to Workflow
-        run: |
-          python add_repos.py
-
-      - name: Commit Changes
-        run: |
-          git config --global user.name "Your Name"
-          git config --global user.email "youremail@example.com"
-          git add .
-          git commit -m "Add repositories to workflow"
-          git push origin main
-        env:
-          ACCESS_TOKEN: ${{ secrets.CLONE }}
+      - name: Run Python script
+        run: python get_cve_list.py
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update CVE list"
+          commit_author: "GitHub Actions <actions@github.com>"
+          commit_options: "--no-verify"
