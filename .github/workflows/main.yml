@@ -1,0 +1,35 @@
+name: Add Repositories to Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  add_repos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install Requests Library
+        run: pip install requests
+
+      - name: Add Repositories to Workflow
+        run: |
+          python add_repos.py
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "youremail@example.com"
+          git add .
+          git commit -m "Add repositories to workflow"
+          git push origin main
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
